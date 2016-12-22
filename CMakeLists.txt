@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 2.8)
+project(ginger C)
+
+set(${PROJECT_NAME}_VERSION_MAJOR 0)
+set(${PROJECT_NAME}_VERSION_MINOR 0)
+set(${PROJECT_NAME}_VERSION_PATCH 0)
+0et(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH})
+
+message(STATUS "ginger version: ${${PROJECT_NAME}_VERSION}")
+
+if (UNIX AND NOT APPLE)
+  add_definitions("-Wall -Wextra -Werror -std=c11")
+  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -pg")
+elseif (APPLE)
+  add_definitions("-Wall -Wextra -Werror -std=c11")
+  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
+  set(CMAKE_MACOSX_RPATH ON)
+endif()
+
+include_directories(include)
+add_subdirectory(src)
+add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SOURCES})
+add_library(${PROJECT_NAME}_static ${${PROJECT_NAME}_SOURCES})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
+set_target_properties(${PROJECT_NAME}_static PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
+if (MSVC)
+  set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/DLIBRARY_EXPORTS")
+else()
+  set_target_properties(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+endif()
+
+if (UNIX)
+  target_link_libraries(${PROJECT_NAME} m)
+endif()
+
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME} DESTINATION lib)
+install(TARGETS ${PROJECT_NAME}_static EXPORT ${PROJECT_NAME} DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
