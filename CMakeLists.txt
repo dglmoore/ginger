@@ -36,3 +36,6 @@ endif()
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME} DESTINATION lib)
 install(TARGETS ${PROJECT_NAME}_static EXPORT ${PROJECT_NAME} DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
+
+enable_testing()
+add_subdirectory(test)
