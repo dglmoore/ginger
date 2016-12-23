@@ -246,4 +246,5 @@ inline static void assert_signal(int sig, char const *caller, int line)
     {
         unit_error("%s:%d expected signal %d, got %d\n", caller, line, sig, signal_code);
     }
+    signal_code = 0;
 }
