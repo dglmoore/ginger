@@ -240,7 +240,7 @@ inline static void assert_dbl_near(double exp, double real, double tol, char con
     }
 }
 
-inline void assert_signal(int sig, char const *caller, int line)
+inline static void assert_signal(int sig, char const *caller, int line)
 {
     if (signal_code != sig)
     {
