@@ -16,6 +16,7 @@ struct gvec_header
 };
 
 typedef void* gvec_t;
+typedef void const* gvec_const_t;
 
 #define gvec_cap(v) ((struct gvec_header*)v)[-1].capacity
 #define gvec_size(v) ((struct gvec_header*)v)[-1].size
@@ -24,6 +25,7 @@ typedef void* gvec_t;
 
 gvec_t gvec_alloc(size_t capacity, size_t length, size_t size);
 void gvec_free(gvec_t v);
+gvec_t gvec_dup(gvec_const_t v);
 
 gvec_t gvec_reserve(gvec_t v, size_t capacity);
 gvec_t gvec_shrink(gvec_t v);

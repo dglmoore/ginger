@@ -2,6 +2,7 @@
 // Use of this source code is governed by a MIT
 // license that can be found in the LICENSE file.
 #include <ginger/vec.h>
+#include <string.h>
 
 gvec_t gvec_alloc(size_t capacity, size_t length, size_t size)
 {
@@ -29,6 +30,20 @@ void gvec_free(gvec_t v)
     --w;
     free(w);
   }
+}
+
+gvec_t gvec_dup(gvec_const_t v)
+{
+  if (v)
+  {
+    gvec_t *w = gvec_alloc(gvec_cap(v), gvec_len(v), gvec_size(v));
+    if (w)
+    {
+      memcpy(w, v, gvec_len(v) * gvec_size(v));
+    }
+    return w;
+  }
+  return NULL;
 }
 
 gvec_t gvec_reserve(gvec_t v, size_t capacity)

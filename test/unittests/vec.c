@@ -42,6 +42,27 @@ UNIT(AllocateOne)
   ASSERT_EQUAL(1, gvec_cap(v));
   ASSERT_EQUAL(sizeof(int), gvec_size(v));
   ASSERT_EQUAL(1, gvec_len(v));
+
+  gvec_free(v);
+}
+
+UNIT(Duplicate)
+{
+  int q[5] = {2,3,4,5,6};
+  int *v = gvec_alloc(5, 5, sizeof(int));
+  ASSERT_NOT_NULL(v);
+  memcpy(v, q, 5*sizeof(int));
+  for (size_t i = 0; i < 5; ++i) ASSERT_EQUAL(i+2, v[i]);
+
+  int *w = gvec_dup(v);
+  ASSERT_NOT_NULL(w);
+  ASSERT_EQUAL(5, gvec_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvec_size(w));
+  ASSERT_EQUAL(5, gvec_len(w));
+  for (size_t i = 0; i < 5; ++i) ASSERT_EQUAL(i+2, w[i]);
+
+  gvec_free(w);
+  gvec_free(v);
 }
 
 UNIT(ReserveGrow)
@@ -196,6 +217,7 @@ BEGIN_SUITE(Vector)
   ADD_UNIT(AllocateZeroSize)
   ADD_UNIT(AllocateZero)
   ADD_UNIT(AllocateOne)
+  ADD_UNIT(Duplicate)
   ADD_UNIT(ReserveGrow)
   ADD_UNIT(ReserveShrink)
   ADD_UNIT(ReserveZero)
