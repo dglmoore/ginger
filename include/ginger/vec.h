@@ -28,7 +28,13 @@ void gvec_free(gvec_t v);
 gvec_t gvec_reserve(gvec_t v, size_t capacity);
 gvec_t gvec_shrink(gvec_t v);
 
-#define gvec_push(v, x) if (v && gvec_len(v) < gvec_cap(v)) { v[gvec_len(v)++] = x; } else { raise(SIGSEGV); }
+#define gvec_push(v, x) \
+if (v && gvec_len(v) >= gvec_cap(v)) { \
+  size_t cap = (v && gvec_cap(v)) ? 2*gvec_cap(v) : 1; \
+  v = gvec_reserve(v, cap); \
+} \
+if (v) { v[gvec_len(v)++] = x; } else { raise(SIGSEGV); }
+
 #define gvec_pop(v) if (v && gvec_len(v) > 0) { --gvec_len(v); }
 
 #define gvec_print(fmt, v) do \

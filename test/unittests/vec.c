@@ -110,18 +110,17 @@ UNIT(PushSuccess)
   ASSERT_EQUAL(3, gvec_cap(v));
   ASSERT_EQUAL(3, gvec_len(v));
   for (size_t i = 0; i < 3; ++i) ASSERT_EQUAL(i+1, v[i]);
+  gvec_push(v,4);
+  ASSERT_EQUAL(6, gvec_cap(v));
+  ASSERT_EQUAL(4, gvec_len(v));
+  for (size_t i = 0; i < 4; ++i) ASSERT_EQUAL(i+1, v[i]);
   gvec_free(v);
 }
 
 UNIT(PushFailure)
 {
   int *v = NULL;
-  ASSERT_SIGNAL(SIGSEGV, gvec_push(v,0));
-
-  v = gvec_alloc(0, 0, sizeof(int));
-  ASSERT_NOT_NULL(v);
-  ASSERT_SIGNAL(SIGSEGV, gvec_push(v,1));
-  gvec_free(v);
+  ASSERT_SIGNAL(SIGSEGV, gvec_push(v, 0));
 }
 
 UNIT(Pop)
