@@ -15,21 +15,21 @@ struct gvector_header
   size_t length;
 };
 
-typedef void* gvector_t;
-typedef void const* gvector_const_t;
+typedef void* gvector;
+typedef void const* gvector_const;
 
 #define gvector_cap(v) ((struct gvector_header*)v)[-1].capacity
 #define gvector_size(v) ((struct gvector_header*)v)[-1].size
 #define gvector_len(v) ((struct gvector_header*)v)[-1].length
 #define gvector_isempty(v) !(v && gvector_len(v))
 
-gvector_t gvector_alloc(size_t capacity, size_t length, size_t size);
-void gvector_free(gvector_t v);
-gvector_t gvector_dup(gvector_const_t v);
-size_t gvector_copy(gvector_t dst, gvector_const_t src);
+gvector gvector_alloc(size_t capacity, size_t length, size_t size);
+void gvector_free(gvector v);
+gvector gvector_dup(gvector_const v);
+size_t gvector_copy(gvector dst, gvector_const src);
 
-gvector_t gvector_reserve(gvector_t v, size_t capacity);
-gvector_t gvector_shrink(gvector_t v);
+gvector gvector_reserve(gvector v, size_t capacity);
+gvector gvector_shrink(gvector v);
 
 #define gvector_push(v, x) \
 if (v && gvector_len(v) >= gvector_cap(v)) { \

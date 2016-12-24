@@ -7,7 +7,7 @@
 
 #define min(x,y) (x < y) ? x : y;
 
-gvector_t gvector_alloc(size_t capacity, size_t length, size_t size)
+gvector gvector_alloc(size_t capacity, size_t length, size_t size)
 {
   if (size)
   {
@@ -25,7 +25,7 @@ gvector_t gvector_alloc(size_t capacity, size_t length, size_t size)
   return NULL;
 }
 
-void gvector_free(gvector_t v)
+void gvector_free(gvector v)
 {
   if (v)
   {
@@ -35,11 +35,11 @@ void gvector_free(gvector_t v)
   }
 }
 
-gvector_t gvector_dup(gvector_const_t v)
+gvector gvector_dup(gvector_const v)
 {
   if (v)
   {
-    gvector_t *w = gvector_alloc(gvector_cap(v), gvector_len(v), gvector_size(v));
+    gvector *w = gvector_alloc(gvector_cap(v), gvector_len(v), gvector_size(v));
     if (w)
     {
       memcpy(w, v, gvector_len(v) * gvector_size(v));
@@ -49,7 +49,7 @@ gvector_t gvector_dup(gvector_const_t v)
   return NULL;
 }
 
-size_t gvector_copy(gvector_t dst, gvector_const_t src)
+size_t gvector_copy(gvector dst, gvector_const src)
 {
   if (dst && src)
   {
@@ -63,7 +63,7 @@ size_t gvector_copy(gvector_t dst, gvector_const_t src)
   return 0;
 }
 
-gvector_t gvector_reserve(gvector_t v, size_t capacity)
+gvector gvector_reserve(gvector v, size_t capacity)
 {
   if (v)
   {
@@ -83,7 +83,7 @@ gvector_t gvector_reserve(gvector_t v, size_t capacity)
   return NULL;
 }
 
-gvector_t gvector_shrink(gvector_t v)
+gvector gvector_shrink(gvector v)
 {
   if (v)
   {
