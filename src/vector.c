@@ -7,12 +7,12 @@
 
 #define min(x,y) (x < y) ? x : y;
 
-gvec_t gvec_alloc(size_t capacity, size_t length, size_t size)
+gvector_t gvector_alloc(size_t capacity, size_t length, size_t size)
 {
   if (size)
   {
     length = (length > capacity) ? capacity : length;
-    struct gvec_header *v = malloc(sizeof(struct gvec_header) + capacity * size);
+    struct gvector_header *v = malloc(sizeof(struct gvector_header) + capacity * size);
     if (v)
     {
       v->capacity = capacity; 
@@ -25,50 +25,50 @@ gvec_t gvec_alloc(size_t capacity, size_t length, size_t size)
   return NULL;
 }
 
-void gvec_free(gvec_t v)
+void gvector_free(gvector_t v)
 {
   if (v)
   {
-    struct gvec_header *w = v;
+    struct gvector_header *w = v;
     --w;
     free(w);
   }
 }
 
-gvec_t gvec_dup(gvec_const_t v)
+gvector_t gvector_dup(gvector_const_t v)
 {
   if (v)
   {
-    gvec_t *w = gvec_alloc(gvec_cap(v), gvec_len(v), gvec_size(v));
+    gvector_t *w = gvector_alloc(gvector_cap(v), gvector_len(v), gvector_size(v));
     if (w)
     {
-      memcpy(w, v, gvec_len(v) * gvec_size(v));
+      memcpy(w, v, gvector_len(v) * gvector_size(v));
     }
     return w;
   }
   return NULL;
 }
 
-size_t gvec_copy(gvec_t dst, gvec_const_t src)
+size_t gvector_copy(gvector_t dst, gvector_const_t src)
 {
   if (dst && src)
   {
-    if (gvec_size(dst) == gvec_size(src))
+    if (gvector_size(dst) == gvector_size(src))
     {
-      size_t len = min(gvec_len(dst), gvec_len(src));
-      memcpy(dst, src, len * gvec_size(src));
+      size_t len = min(gvector_len(dst), gvector_len(src));
+      memcpy(dst, src, len * gvector_size(src));
       return len;
     }
   }
   return 0;
 }
 
-gvec_t gvec_reserve(gvec_t v, size_t capacity)
+gvector_t gvector_reserve(gvector_t v, size_t capacity)
 {
   if (v)
   {
-    struct gvec_header *w = ((struct gvec_header*)v) - 1;
-    struct gvec_header *u = realloc(w, sizeof(struct gvec_header) + capacity * w->size);
+    struct gvector_header *w = ((struct gvector_header*)v) - 1;
+    struct gvector_header *u = realloc(w, sizeof(struct gvector_header) + capacity * w->size);
     if (u)
     {
       u->capacity = capacity;
@@ -83,11 +83,11 @@ gvec_t gvec_reserve(gvec_t v, size_t capacity)
   return NULL;
 }
 
-gvec_t gvec_shrink(gvec_t v)
+gvector_t gvector_shrink(gvector_t v)
 {
   if (v)
   {
-    return gvec_reserve(v, gvec_len(v));
+    return gvector_reserve(v, gvector_len(v));
   }
   return NULL;
 }

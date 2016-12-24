@@ -8,39 +8,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct gvec_header
+struct gvector_header
 {
   size_t capacity;
   size_t size;
   size_t length;
 };
 
-typedef void* gvec_t;
-typedef void const* gvec_const_t;
+typedef void* gvector_t;
+typedef void const* gvector_const_t;
 
-#define gvec_cap(v) ((struct gvec_header*)v)[-1].capacity
-#define gvec_size(v) ((struct gvec_header*)v)[-1].size
-#define gvec_len(v) ((struct gvec_header*)v)[-1].length
-#define gvec_isempty(v) !(v && gvec_len(v))
+#define gvector_cap(v) ((struct gvector_header*)v)[-1].capacity
+#define gvector_size(v) ((struct gvector_header*)v)[-1].size
+#define gvector_len(v) ((struct gvector_header*)v)[-1].length
+#define gvector_isempty(v) !(v && gvector_len(v))
 
-gvec_t gvec_alloc(size_t capacity, size_t length, size_t size);
-void gvec_free(gvec_t v);
-gvec_t gvec_dup(gvec_const_t v);
-size_t gvec_copy(gvec_t dst, gvec_const_t src);
+gvector_t gvector_alloc(size_t capacity, size_t length, size_t size);
+void gvector_free(gvector_t v);
+gvector_t gvector_dup(gvector_const_t v);
+size_t gvector_copy(gvector_t dst, gvector_const_t src);
 
-gvec_t gvec_reserve(gvec_t v, size_t capacity);
-gvec_t gvec_shrink(gvec_t v);
+gvector_t gvector_reserve(gvector_t v, size_t capacity);
+gvector_t gvector_shrink(gvector_t v);
 
-#define gvec_push(v, x) \
-if (v && gvec_len(v) >= gvec_cap(v)) { \
-  size_t cap = (v && gvec_cap(v)) ? 2*gvec_cap(v) : 1; \
-  v = gvec_reserve(v, cap); \
+#define gvector_push(v, x) \
+if (v && gvector_len(v) >= gvector_cap(v)) { \
+  size_t cap = (v && gvector_cap(v)) ? 2*gvector_cap(v) : 1; \
+  v = gvector_reserve(v, cap); \
 } \
-if (v) { v[gvec_len(v)++] = x; } else { raise(SIGSEGV); }
+if (v) { v[gvector_len(v)++] = x; } else { raise(SIGSEGV); }
 
-#define gvec_pop(v) if (v && gvec_len(v) > 0) { --gvec_len(v); }
+#define gvector_pop(v) if (v && gvector_len(v) > 0) { --gvector_len(v); }
 
-#define gvec_print(fmt, v) do \
+#define gvector_print(fmt, v) do \
 { \
-  for (size_t i = 0; i < gvec_len(v); ++i) printf(fmt, v[i]); \
+  for (size_t i = 0; i < gvector_len(v); ++i) printf(fmt, v[i]); \
 } while(0);

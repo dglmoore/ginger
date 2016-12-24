@@ -6,256 +6,256 @@
 
 UNIT(AllocateZeroSize)
 {
-  ASSERT_NULL(gvec_alloc(0, 0, 0));
-  ASSERT_NULL(gvec_alloc(5, 0, 0));
-  ASSERT_NULL(gvec_alloc(0, 5, 0));
-  ASSERT_NULL(gvec_alloc(5, 5, 0));
+  ASSERT_NULL(gvector_alloc(0, 0, 0));
+  ASSERT_NULL(gvector_alloc(5, 0, 0));
+  ASSERT_NULL(gvector_alloc(0, 5, 0));
+  ASSERT_NULL(gvector_alloc(5, 5, 0));
 }
 
 UNIT(AllocateZero)
 {
-  int *v = gvec_alloc(0, 0, sizeof(int));
+  int *v = gvector_alloc(0, 0, sizeof(int));
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(0, gvec_cap(v));
-  ASSERT_EQUAL(sizeof(int), gvec_size(v));
-  ASSERT_EQUAL(0, gvec_len(v));
-  gvec_free(v);
+  ASSERT_EQUAL(0, gvector_cap(v));
+  ASSERT_EQUAL(sizeof(int), gvector_size(v));
+  ASSERT_EQUAL(0, gvector_len(v));
+  gvector_free(v);
 }
 
 UNIT(AllocateOne)
 {
-  int *v = gvec_alloc(1, 0, sizeof(int));
+  int *v = gvector_alloc(1, 0, sizeof(int));
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(1, gvec_cap(v));
-  ASSERT_EQUAL(sizeof(int), gvec_size(v));
-  ASSERT_EQUAL(0, gvec_len(v));
-  gvec_free(v);
+  ASSERT_EQUAL(1, gvector_cap(v));
+  ASSERT_EQUAL(sizeof(int), gvector_size(v));
+  ASSERT_EQUAL(0, gvector_len(v));
+  gvector_free(v);
 
-  v = gvec_alloc(1, 1, sizeof(int));
+  v = gvector_alloc(1, 1, sizeof(int));
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(1, gvec_cap(v));
-  ASSERT_EQUAL(sizeof(int), gvec_size(v));
-  ASSERT_EQUAL(1, gvec_len(v));
+  ASSERT_EQUAL(1, gvector_cap(v));
+  ASSERT_EQUAL(sizeof(int), gvector_size(v));
+  ASSERT_EQUAL(1, gvector_len(v));
 
-  v = gvec_alloc(1, 2, sizeof(int));
+  v = gvector_alloc(1, 2, sizeof(int));
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(1, gvec_cap(v));
-  ASSERT_EQUAL(sizeof(int), gvec_size(v));
-  ASSERT_EQUAL(1, gvec_len(v));
+  ASSERT_EQUAL(1, gvector_cap(v));
+  ASSERT_EQUAL(sizeof(int), gvector_size(v));
+  ASSERT_EQUAL(1, gvector_len(v));
 
-  gvec_free(v);
+  gvector_free(v);
 }
 
 UNIT(Duplicate)
 {
   int q[5] = {2,3,4,5,6};
-  int *v = gvec_alloc(5, 5, sizeof(int));
+  int *v = gvector_alloc(5, 5, sizeof(int));
   ASSERT_NOT_NULL(v);
   memcpy(v, q, 5*sizeof(int));
   for (size_t i = 0; i < 5; ++i) ASSERT_EQUAL(i+2, v[i]);
 
-  int *w = gvec_dup(v);
+  int *w = gvector_dup(v);
   ASSERT_NOT_NULL(w);
-  ASSERT_EQUAL(5, gvec_cap(w));
-  ASSERT_EQUAL(sizeof(int), gvec_size(w));
-  ASSERT_EQUAL(5, gvec_len(w));
+  ASSERT_EQUAL(5, gvector_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvector_size(w));
+  ASSERT_EQUAL(5, gvector_len(w));
   for (size_t i = 0; i < 5; ++i) ASSERT_EQUAL(i+2, w[i]);
 
-  gvec_free(w);
-  gvec_free(v);
+  gvector_free(w);
+  gvector_free(v);
 }
 
 UNIT(CopyNull)
 {
   int *v = NULL, *w = NULL;
-  ASSERT_EQUAL(0, gvec_copy(w, v));
+  ASSERT_EQUAL(0, gvector_copy(w, v));
 
-  v = gvec_alloc(5, 2, sizeof(int));
+  v = gvector_alloc(5, 2, sizeof(int));
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(0, gvec_copy(w, v));
-  ASSERT_EQUAL(0, gvec_copy(v, w));
+  ASSERT_EQUAL(0, gvector_copy(w, v));
+  ASSERT_EQUAL(0, gvector_copy(v, w));
 
-  gvec_free(w);
+  gvector_free(w);
 }
 
 UNIT(CopySameSize)
 {
-  int *v = gvec_alloc(5, 5, sizeof(int));
+  int *v = gvector_alloc(5, 5, sizeof(int));
   ASSERT_NOT_NULL(v);
   for (size_t i = 0; i < 5; ++i) v[i] = i;
-  int *w = gvec_alloc(3, 3, sizeof(int));
+  int *w = gvector_alloc(3, 3, sizeof(int));
   ASSERT_NOT_NULL(w);
 
-  ASSERT_EQUAL(3, gvec_copy(w, v));
+  ASSERT_EQUAL(3, gvector_copy(w, v));
   for (size_t i = 0; i < 3; ++i) ASSERT_EQUAL(i, w[i]);
 
   for (size_t i = 0; i < 3; ++i) w[i] = i * i;
-  ASSERT_EQUAL(3, gvec_copy(v, w));
+  ASSERT_EQUAL(3, gvector_copy(v, w));
   for (size_t i = 0; i < 3; ++i) ASSERT_EQUAL(i*i, v[i]);
 
-  gvec_free(w);
-  gvec_free(v);
+  gvector_free(w);
+  gvector_free(v);
 }
 
 UNIT(CopyDiffSize)
 {
-  int *v = gvec_alloc(5, 5, sizeof(int));
+  int *v = gvector_alloc(5, 5, sizeof(int));
   ASSERT_NOT_NULL(v);
-  char *w = gvec_alloc(10, 10, sizeof(char));
+  char *w = gvector_alloc(10, 10, sizeof(char));
   ASSERT_NOT_NULL(w);
 
-  ASSERT_EQUAL(0, gvec_copy(w,v));
+  ASSERT_EQUAL(0, gvector_copy(w,v));
 
-  gvec_free(w);
-  gvec_free(v);
+  gvector_free(w);
+  gvector_free(v);
 }
 
 UNIT(ReserveGrow)
 {
   size_t const N = 2;
 
-  int *v = gvec_alloc(N, N, sizeof(int));
+  int *v = gvector_alloc(N, N, sizeof(int));
   for (size_t i = 0; i < N; ++i) v[i] = (int)i;
   ASSERT_NOT_NULL(v);
 
-  int *w = gvec_reserve(v, 3*N);
+  int *w = gvector_reserve(v, 3*N);
   ASSERT_NOT_NULL(w);
-  ASSERT_EQUAL(6, gvec_cap(w));
-  ASSERT_EQUAL(sizeof(int), gvec_size(w));
-  ASSERT_EQUAL(N, gvec_len(w));
+  ASSERT_EQUAL(6, gvector_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvector_size(w));
+  ASSERT_EQUAL(N, gvector_len(w));
   for (size_t i = 0; i < N; ++i) ASSERT_EQUAL(i, w[i]);
 
-  gvec_free(w);
+  gvector_free(w);
 }
 
 UNIT(ReserveShrink)
 {
   size_t const N = 2;
-  int *v = gvec_alloc(3*N, 3*N, sizeof(int));
+  int *v = gvector_alloc(3*N, 3*N, sizeof(int));
   for (size_t i = 0; i < 3*N; ++i) v[i] = (int)i;
   ASSERT_NOT_NULL(v);
 
-  int *w = gvec_reserve(v, N);
+  int *w = gvector_reserve(v, N);
   ASSERT_NOT_NULL(w);
-  ASSERT_EQUAL(N, gvec_cap(w));
-  ASSERT_EQUAL(sizeof(int), gvec_size(w));
-  ASSERT_EQUAL(N, gvec_len(w));
+  ASSERT_EQUAL(N, gvector_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvector_size(w));
+  ASSERT_EQUAL(N, gvector_len(w));
   for (size_t i = 0; i < N; ++i) ASSERT_EQUAL(i, w[i]);
 
-  gvec_free(w);
+  gvector_free(w);
 }
 
 UNIT(ReserveZero)
 {
   size_t const N = 2;
-  int *v = gvec_alloc(3*N, 3*N, sizeof(int));
+  int *v = gvector_alloc(3*N, 3*N, sizeof(int));
   for (size_t i = 0; i < 3*N; ++i) v[i] = (int)i;
   ASSERT_NOT_NULL(v);
 
-  int *w = gvec_reserve(v, 0);
+  int *w = gvector_reserve(v, 0);
   ASSERT_NOT_NULL(w);
-  ASSERT_EQUAL(0, gvec_cap(w));
-  ASSERT_EQUAL(sizeof(int), gvec_size(w));
-  ASSERT_EQUAL(0, gvec_len(w));
+  ASSERT_EQUAL(0, gvector_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvector_size(w));
+  ASSERT_EQUAL(0, gvector_len(w));
 
-  gvec_free(w);
+  gvector_free(w);
 }
 
 UNIT(ReserveNULL)
 {
-  ASSERT_NULL(gvec_reserve(NULL, 5));
+  ASSERT_NULL(gvector_reserve(NULL, 5));
 }
 
 UNIT(PushSuccess)
 {
-  int *v = gvec_alloc(3, 0, sizeof(int));
+  int *v = gvector_alloc(3, 0, sizeof(int));
   ASSERT_NOT_NULL(v);
-  gvec_push(v,1);
-  gvec_push(v,2);
-  gvec_push(v,3);
-  ASSERT_EQUAL(3, gvec_cap(v));
-  ASSERT_EQUAL(3, gvec_len(v));
+  gvector_push(v,1);
+  gvector_push(v,2);
+  gvector_push(v,3);
+  ASSERT_EQUAL(3, gvector_cap(v));
+  ASSERT_EQUAL(3, gvector_len(v));
   for (size_t i = 0; i < 3; ++i) ASSERT_EQUAL(i+1, v[i]);
-  gvec_push(v,4);
-  ASSERT_EQUAL(6, gvec_cap(v));
-  ASSERT_EQUAL(4, gvec_len(v));
+  gvector_push(v,4);
+  ASSERT_EQUAL(6, gvector_cap(v));
+  ASSERT_EQUAL(4, gvector_len(v));
   for (size_t i = 0; i < 4; ++i) ASSERT_EQUAL(i+1, v[i]);
-  gvec_free(v);
+  gvector_free(v);
 }
 
 UNIT(PushFailure)
 {
   int *v = NULL;
-  ASSERT_SIGNAL(SIGSEGV, gvec_push(v, 0));
+  ASSERT_SIGNAL(SIGSEGV, gvector_push(v, 0));
 }
 
 UNIT(Pop)
 {
-  int *v = gvec_alloc(3, 3, sizeof(int));
+  int *v = gvector_alloc(3, 3, sizeof(int));
   ASSERT_NOT_NULL(v);
 
-  gvec_pop(v);
-  ASSERT_EQUAL(3, gvec_cap(v));
-  ASSERT_EQUAL(2, gvec_len(v));
+  gvector_pop(v);
+  ASSERT_EQUAL(3, gvector_cap(v));
+  ASSERT_EQUAL(2, gvector_len(v));
 
-  gvec_pop(v);
-  ASSERT_EQUAL(3, gvec_cap(v));
-  ASSERT_EQUAL(1, gvec_len(v));
+  gvector_pop(v);
+  ASSERT_EQUAL(3, gvector_cap(v));
+  ASSERT_EQUAL(1, gvector_len(v));
 
-  gvec_pop(v);
-  ASSERT_EQUAL(3, gvec_cap(v));
-  ASSERT_EQUAL(0, gvec_len(v));
+  gvector_pop(v);
+  ASSERT_EQUAL(3, gvector_cap(v));
+  ASSERT_EQUAL(0, gvector_len(v));
 
-  gvec_pop(v);
-  ASSERT_EQUAL(3, gvec_cap(v));
-  ASSERT_EQUAL(0, gvec_len(v));
+  gvector_pop(v);
+  ASSERT_EQUAL(3, gvector_cap(v));
+  ASSERT_EQUAL(0, gvector_len(v));
 
-  gvec_free(v);
+  gvector_free(v);
 }
 
 UNIT(IsEmpty)
 {
-  ASSERT_TRUE(gvec_isempty(NULL));
+  ASSERT_TRUE(gvector_isempty(NULL));
 
   int *v = NULL;
-  ASSERT_TRUE(gvec_isempty(v));
+  ASSERT_TRUE(gvector_isempty(v));
 
-  v = gvec_alloc(3, 0, sizeof(int));
-  ASSERT_TRUE(gvec_isempty(v));
+  v = gvector_alloc(3, 0, sizeof(int));
+  ASSERT_TRUE(gvector_isempty(v));
 
-  gvec_push(v, 1);
-  ASSERT_FALSE(gvec_isempty(v));
+  gvector_push(v, 1);
+  ASSERT_FALSE(gvector_isempty(v));
 
-  gvec_free(v);
+  gvector_free(v);
 }
 
 UNIT(Shrink)
 {
-  int *v = gvec_alloc(5, 2, sizeof(int));
+  int *v = gvector_alloc(5, 2, sizeof(int));
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(5, gvec_cap(v));
-  ASSERT_EQUAL(sizeof(int), gvec_size(v));
-  ASSERT_EQUAL(2, gvec_len(v));
+  ASSERT_EQUAL(5, gvector_cap(v));
+  ASSERT_EQUAL(sizeof(int), gvector_size(v));
+  ASSERT_EQUAL(2, gvector_len(v));
 
-  int *w = gvec_shrink(v);
+  int *w = gvector_shrink(v);
   ASSERT_NOT_NULL(w);
-  ASSERT_EQUAL(2, gvec_cap(w));
-  ASSERT_EQUAL(sizeof(int), gvec_size(w));
-  ASSERT_EQUAL(2, gvec_len(w));
+  ASSERT_EQUAL(2, gvector_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvector_size(w));
+  ASSERT_EQUAL(2, gvector_len(w));
 
-  gvec_len(w) = 0;
+  gvector_len(w) = 0;
   ASSERT_NOT_NULL(w);
-  ASSERT_EQUAL(2, gvec_cap(w));
-  ASSERT_EQUAL(sizeof(int), gvec_size(w));
-  ASSERT_EQUAL(0, gvec_len(w));
+  ASSERT_EQUAL(2, gvector_cap(w));
+  ASSERT_EQUAL(sizeof(int), gvector_size(w));
+  ASSERT_EQUAL(0, gvector_len(w));
 
-  v = gvec_shrink(w);
+  v = gvector_shrink(w);
   ASSERT_NOT_NULL(v);
-  ASSERT_EQUAL(0, gvec_cap(v));
-  ASSERT_EQUAL(sizeof(int), gvec_size(v));
-  ASSERT_EQUAL(0, gvec_len(v));
+  ASSERT_EQUAL(0, gvector_cap(v));
+  ASSERT_EQUAL(sizeof(int), gvector_size(v));
+  ASSERT_EQUAL(0, gvector_len(v));
 
-  gvec_free(v);
+  gvector_free(v);
 }
 
 BEGIN_SUITE(Vector)
