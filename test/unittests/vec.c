@@ -65,6 +65,51 @@ UNIT(Duplicate)
   gvec_free(v);
 }
 
+UNIT(CopyNull)
+{
+  int *v = NULL, *w = NULL;
+  ASSERT_EQUAL(0, gvec_copy(w, v));
+
+  v = gvec_alloc(5, 2, sizeof(int));
+  ASSERT_NOT_NULL(v);
+  ASSERT_EQUAL(0, gvec_copy(w, v));
+  ASSERT_EQUAL(0, gvec_copy(v, w));
+
+  gvec_free(w);
+}
+
+UNIT(CopySameSize)
+{
+  int *v = gvec_alloc(5, 5, sizeof(int));
+  ASSERT_NOT_NULL(v);
+  for (size_t i = 0; i < 5; ++i) v[i] = i;
+  int *w = gvec_alloc(3, 3, sizeof(int));
+  ASSERT_NOT_NULL(w);
+
+  ASSERT_EQUAL(3, gvec_copy(w, v));
+  for (size_t i = 0; i < 3; ++i) ASSERT_EQUAL(i, w[i]);
+
+  for (size_t i = 0; i < 3; ++i) w[i] = i * i;
+  ASSERT_EQUAL(3, gvec_copy(v, w));
+  for (size_t i = 0; i < 3; ++i) ASSERT_EQUAL(i*i, v[i]);
+
+  gvec_free(w);
+  gvec_free(v);
+}
+
+UNIT(CopyDiffSize)
+{
+  int *v = gvec_alloc(5, 5, sizeof(int));
+  ASSERT_NOT_NULL(v);
+  char *w = gvec_alloc(10, 10, sizeof(char));
+  ASSERT_NOT_NULL(w);
+
+  ASSERT_EQUAL(0, gvec_copy(w,v));
+
+  gvec_free(w);
+  gvec_free(v);
+}
+
 UNIT(ReserveGrow)
 {
   size_t const N = 2;
@@ -218,6 +263,9 @@ BEGIN_SUITE(Vector)
   ADD_UNIT(AllocateZero)
   ADD_UNIT(AllocateOne)
   ADD_UNIT(Duplicate)
+  ADD_UNIT(CopyNull)
+  ADD_UNIT(CopySameSize)
+  ADD_UNIT(CopyDiffSize)
   ADD_UNIT(ReserveGrow)
   ADD_UNIT(ReserveShrink)
   ADD_UNIT(ReserveZero)

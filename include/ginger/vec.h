@@ -26,6 +26,7 @@ typedef void const* gvec_const_t;
 gvec_t gvec_alloc(size_t capacity, size_t length, size_t size);
 void gvec_free(gvec_t v);
 gvec_t gvec_dup(gvec_const_t v);
+size_t gvec_copy(gvec_t dst, gvec_const_t src);
 
 gvec_t gvec_reserve(gvec_t v, size_t capacity);
 gvec_t gvec_shrink(gvec_t v);
