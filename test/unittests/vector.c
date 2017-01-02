@@ -36,13 +36,13 @@ UNIT(AllocateOne)
   ASSERT_EQUAL(1, gvector_cap(v));
   ASSERT_EQUAL(sizeof(int), gvector_size(v));
   ASSERT_EQUAL(1, gvector_len(v));
+  gvector_free(v);
 
   v = gvector_alloc(1, 2, sizeof(int));
   ASSERT_NOT_NULL(v);
   ASSERT_EQUAL(1, gvector_cap(v));
   ASSERT_EQUAL(sizeof(int), gvector_size(v));
   ASSERT_EQUAL(1, gvector_len(v));
-
   gvector_free(v);
 }
 
@@ -74,8 +74,7 @@ UNIT(CopyNull)
   ASSERT_NOT_NULL(v);
   ASSERT_EQUAL(0, gvector_copy(w, v));
   ASSERT_EQUAL(0, gvector_copy(v, w));
-
-  gvector_free(w);
+  gvector_free(v);
 }
 
 UNIT(CopySameSize)
