@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <float.h>
 #include <inttypes.h>
+#include <math.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdarg.h>
@@ -160,6 +161,18 @@ inline static void assert_null(void *real, char const *caller, int line);
 inline static void assert_not_null(void *real, char const *caller, int line);
 #define ASSERT_NOT_NULL(real) assert_not_null(real, __FILE__, __LINE__)
 
+inline static void assert_not_nan(double real, char const *caller, int line);
+#define ASSERT_NOT_NAN(real) assert_not_nan(real, __FILE__, __LINE__);
+
+inline static void assert_nan(double real, char const *caller, int line);
+#define ASSERT_NAN(real) assert_nan(real, __FILE__, __LINE__);
+
+inline static void assert_not_inf(double real, char const *caller, int line);
+#define ASSERT_NOT_INF(real) assert_not_inf(real, __FILE__, __LINE__);
+
+inline static void assert_inf(double real, char const *caller, int line);
+#define ASSERT_INF(real) assert_inf(real, __FILE__, __LINE__);
+
 inline static void assert_dbl_near(double exp, double real, double tol, char const *caller, int line);
 #define ASSERT_DBL_NEAR_TOL(exp, real, tol) assert_dbl_near(exp, real, tol, __FILE__, __LINE__)
 #define ASSERT_DBL_NEAR(exp, real) assert_dbl_near(exp, real, DBL_EPSILON, __FILE__, __LINE__)
@@ -175,6 +188,10 @@ static inline void assert_signal(int sig, char const *caller, int line);
     assert_signal(sig, file, line); \
     signal(sig, current_signal_handler); \
   }
+
+inline static void assert_dbl_array_near(double *exp, double *real, size_t n, double tol, char const *caller, int line);
+#define ASSERT_DBL_ARRAY_NEAR_TOL(exp, real, n, tol) assert_dbl_array_near(exp, real, n, tol, __FILE__, __LINE__)
+#define ASSERT_DBL_ARRAY_NEAR(exp, real, n) assert_dbl_array_near(exp, real, n, DBL_EPSILON, __FILE__, __LINE__)
 
 inline static void assert_equal(intmax_t exp, intmax_t real, char const *caller, int line)
 {
@@ -240,8 +257,62 @@ inline static void assert_not_null(void *real, const char *caller, int line)
   }
 }
 
+inline static void assert_not_inf(double real, char const *caller, int line)
+{
+  if (isinf(real))
+  {
+    unit_error("%s: %d unexpected INFINITY", caller, line);
+  }
+}
+
+inline static void assert_inf(double real, char const *caller, int line)
+{
+  if (!isinf(real))
+  {
+    unit_error("%s: %d expected INFINITY, got %0.3e", real, caller, line);
+  }
+}
+
+inline static void assert_not_nan(double real, char const *caller, int line)
+{
+  if (isnan(real))
+  {
+    unit_error("%s: %d unexpected NAN", caller, line);
+  }
+}
+
+inline static void assert_nan(double real, char const *caller, int line)
+{
+  if (!isnan(real))
+  {
+    unit_error("%s: %d expected NAN, got %0.3e", real, caller, line);
+  }
+}
+
 inline static void assert_dbl_near(double exp, double real, double tol, char const *caller, int line)
 {
+  if (isnan(exp))
+  {
+    if (!isnan(real))
+    {
+      unit_error("%s:%d expected NAN, got %0.3e", caller, line, real);
+    }
+  }
+  else if (isnan(real))
+  {
+    unit_error("%s:%d expected %0.3e, got NAN", caller, line, exp);
+  }
+  if (isinf(exp))
+  {
+    if (!isinf(real))
+    {
+      unit_error("%s:%d expected INFINITY, got %0.3e", caller, line, real);
+    }
+  }
+  else if (isinf(real))
+  {
+    unit_error("%s:%d expected %0.3e, got INFINITY", caller, line, exp);
+  }
   double diff = exp - real;
   tol += DBL_EPSILON;
   double absdiff = (diff < 0.) ? -diff : diff;
@@ -258,4 +329,12 @@ inline static void assert_signal(int sig, char const *caller, int line)
     unit_error("%s:%d expected signal %d, got %d\n", caller, line, sig, signal_code);
   }
   signal_code = 0;
+}
+
+inline static void assert_dbl_array_near(double *exp, double *real, size_t n, double tol, char const *caller, int line)
+{
+  for (size_t i = 0; i < n; ++i)
+  {
+    assert_dbl_near(exp[i], real[i], tol, caller, line);
+  }
 }
