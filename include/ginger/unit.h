@@ -14,6 +14,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 struct unit
 {
   char const *name;
@@ -338,3 +343,7 @@ inline static void assert_dbl_array_near(double *exp, double *real, size_t n, do
     assert_dbl_near(exp[i], real[i], tol, caller, line);
   }
 }
+
+#ifdef __cplusplus
+}
+#endif
