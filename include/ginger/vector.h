@@ -8,6 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 struct gvector_header
 {
   size_t capacity;
@@ -44,3 +49,7 @@ if (v) { v[gvector_len(v)++] = x; } else { raise(SIGSEGV); }
 { \
   for (size_t i = 0; i < gvector_len(v); ++i) printf(fmt, v[i]); \
 } while(0);
+
+#ifdef __cplusplus
+}
+#endif
