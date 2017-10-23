@@ -5,7 +5,7 @@
 #include <math.h>
 #include <string.h>
 
-#define min(x,y) (x < y) ? x : y;
+#define MIN(x,y) (x < y) ? x : y;
 
 gvector gvector_alloc(size_t capacity, size_t length, size_t size)
 {
@@ -55,7 +55,7 @@ size_t gvector_copy(gvector dst, gvector_const src)
   {
     if (gvector_size(dst) == gvector_size(src))
     {
-      size_t len = min(gvector_len(dst), gvector_len(src));
+      size_t len = MIN(gvector_len(dst), gvector_len(src));
       memcpy(dst, src, len * gvector_size(src));
       return len;
     }
