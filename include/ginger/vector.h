@@ -45,11 +45,6 @@ if (v) { v[gvector_len(v)++] = x; } else { raise(SIGSEGV); }
 
 #define gvector_pop(v) if (v && gvector_len(v) > 0) { --gvector_len(v); }
 
-#define gvector_print(fmt, v) do \
-{ \
-  for (size_t i = 0; i < gvector_len(v); ++i) printf(fmt, v[i]); \
-} while(0);
-
 #ifdef __cplusplus
 }
 #endif
