@@ -1,0 +1,15 @@
+version: 0.0.2.{build}
+configuration:
+- Debug
+- Release
+platform:
+- x64
+- x86
+- Any CPU
+before_build:
+- ps: cmake .
+build:
+  project: ALL_BUILD.vcxproj
+  verbosity: normal
+test_script:
+- cmd: test\%CONFIGURATION%\ginger_unittest.exe
