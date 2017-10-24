@@ -9,3 +9,5 @@ v0.2.0, October 2017
 :leveloffset: 1
 
 include::getting-started.adoc[]
+
+include::vector.adoc[]
