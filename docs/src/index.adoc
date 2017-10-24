@@ -11,3 +11,5 @@ v0.2.0, October 2017
 include::getting-started.adoc[]
 
 include::vector.adoc[]
+
+include::unit.adoc[]
