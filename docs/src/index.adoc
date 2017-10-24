@@ -1,0 +1,7 @@
+= Ginger: A simple library for a more fruitful C
+Douglas G. Moore <doug@dglmoore.com>
+v0.2.0, October 2017
+:toc2:
+:toclevels: 3
+:source-highlighter: prettify
+:stem: latexmath
