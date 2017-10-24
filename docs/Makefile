@@ -1,9 +1,9 @@
-all: html/index.html
+all: index.html
 
-html/%.html: src/%.adoc
-	asciidoctor -b html5 -D html $<
+%.html: %.adoc
+	asciidoctor -b html5 $<
 
 clean:
-	rm -rf html
+	rm -rf *.html
 
 .PHONY: clean

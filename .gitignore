@@ -34,4 +34,4 @@
 
 # Build Directories
 build
-docs/html
+docs/*.html
