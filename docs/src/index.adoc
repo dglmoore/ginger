@@ -5,3 +5,7 @@ v0.2.0, October 2017
 :toclevels: 3
 :source-highlighter: prettify
 :stem: latexmath
+
+:leveloffset: 1
+
+include::getting-started.adoc[]

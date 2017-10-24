@@ -1,0 +1,28 @@
+= Getting Started
+
+== Installation
+To build *ginger*, you will need to have https://cmake.org/[CMake]. For most
+you can use your package manager, e.g. `apt-get`, `pacman` or `yum` on Linux
+or `homebrew`, `macports` or `fink` on OS X.
+
+=== Linux, OS X, and Windows (Bash, MinGW and Cygwin)
+Once CMake is installed, building, testing and installing the library is a snap
+[source]
+----
+$ cmake . -DCMAKE_BUILD_TYPE=Release
+$ make all tests
+$ sudo make install
+----
+
+=== Windows with MSVC
+Building with MSVC is a bit more involved. Open the Visual C++ MSBuild command
+prompt (should be in your start menu). You can then run cmake build and test
+from the prompt:
+[source]
+----
+$ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015"
+$ msbuild /p:Configuration=Release ALL_BUILD.vcxproj
+$ test\Release\ginger_unittest.exe
+----
+Installation requires the user to manually copy the headers and libraries to
+wherever the user would like.
