@@ -6,6 +6,9 @@ v0.2.0, October 2017
 :source-highlighter: prettify
 :stem: latexmath
 
+*Ginger* is a simple library written to make C programmers' lives easier by
+augmenting the C standard library with useful utilities that are sorely lacking.
+
 :leveloffset: 1
 
 include::getting-started.adoc[]
