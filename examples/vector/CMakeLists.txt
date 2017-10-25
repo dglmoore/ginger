@@ -1,1 +1,6 @@
 add_executable(alloc alloc.c)
+add_executable(dup dup.c)
+add_executable(copy copy.c)
+add_executable(reserve reserve.c)
+add_executable(shrink shrink.c)
+add_executable(stack stack.c)
