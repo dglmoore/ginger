@@ -9,7 +9,7 @@ or `homebrew`, `macports` or `fink` on OS X.
 Once CMake is installed, building, testing and installing the library is a snap
 [source, sh]
 ----
-λ cmake . -DCMAKE_BUILD_TYPE=Release
+λ cmake . -DCMAKE_BUILD_TYPE=Release -DEXAMPLES=Yes
 λ make all tests
 λ sudo make install
 ----
@@ -20,7 +20,7 @@ prompt (should be in your start menu). You can then run cmake build and test
 from the prompt:
 [source, sh]
 ----
-λ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015"
+λ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015" -DEXAMPLES=Yes
 λ msbuild /p:Configuration=Release ALL_BUILD.vcxproj
 λ test\Release\ginger_unittest.exe
 ----
