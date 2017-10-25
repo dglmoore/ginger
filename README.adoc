@@ -8,7 +8,7 @@ v0.2.0, October 2017
 augmenting the C standard library with useful utilities that are sorely lacking.
 
 image:https://travis-ci.org/dglmoore/ginger.svg?branch=master[Build Status (Travis CI), link=https://travis-ci.org/dglmoore/ginger]
-image:https://ci.appveyor.com/api/projects/status/c7jo983wjih5hahb?svg=true[Build Status (AppVeyor), link=https://ci.appveyor.com/project/dglmoore/ginger]
+image:https://ci.appveyor.com/api/projects/status/c7jo983wjih5hahb/branch/master?svg=true[Build Status (AppVeyor), link=https://ci.appveyor.com/project/dglmoore/ginger]
 
 == Installation
 To build *ginger*, you will need to have https://cmake.org/[CMake]. For most
