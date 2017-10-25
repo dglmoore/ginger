@@ -1,0 +1,337 @@
+[[Unit]]
+= Unit Testing Framework
+
+*Ginger* provides a simple unit testing framework, called `unit`. Unit lets the
+user create unit tests, test suites, and simplifies creating a single unit
+testing executable. In this section we'll walk through the recommended file
+structure for using `unit`. *Ginger* uses `unit` for its own unit testing, so
+a working example can be found in
+https://github.com/dglmoore/ginger/tree/master/test[test].
+
+== Examples
+
+=== A Single Test Suite
+We start by creating and registering a canary test suite, and setting up a basic
+entry point for our test executable.
+
+.main.c
+[[unit-main.c]]
+[source,c]
+----
+#include <ginger/unit.h>
+
+UNIT(CanaryTest) {
+    ASSERT_EQUAL(5, 1 + 2); // Should fail
+}
+
+BEGIN_SUITE(CanarySuite)
+    ADD_UNIT(CanaryTest)
+END_SUITE
+
+BEGIN_REGISTRATION
+    REGISTER(CanarySuite)
+END_REGISTRATION
+
+UNIT_MAIN()
+----
+
+We can then compile and run our unit tests
+[source,sh]
+----
+λ gcc -std=c11 -o unittest main.c
+λ ./unittest
+[SUITE] CanarySuite
+  [TEST] CanaryTest main.c:4 - expected 5, got 3 [FAIL]
+RESULTS: 1 tests (0 ok, 1 failed)
+----
+Since `unit` is a header-only utility, there is no need to link against the
+`ginger` library. However, you will need to make sure the `ginger/unit.h` header
+is in your include path.
+
+=== Additional Test Suites
+
+Now, let's add another suite, `Vector`, to test *ginger's* dynamic array type
+<<GVector, gvector>>.
+
+.vector.c
+[source,c]
+----
+#include <ginger/vector.h>
+#include <ginger/unit.h>
+
+UNIT(VectorAlloc) {
+    int *xs = gvector_alloc(5, 3, sizeof(int));
+    ASSERT_NOT_NULL(xs);
+    ASSERT_EQUAL_U(5, gvector_cap(xs));
+    ASSERT_EQUAL_U(3, gvector_len(xs));
+    ASSERT_EQUAL_U(sizeof(int), gvector_size(xs));
+    gvector_free(xs);
+}
+
+BEGIN_SUITE(Vector)
+    ADD_UNIT(VectorAlloc)
+END_SUITE
+----
+
+Once we've created the new suite, we need to register it. We
+use the <<unit-entry, IMPORT_SUITE>> macro to import the suite, and modify the
+registration section of <<unit-main.c, main.c>>.
+
+[source,c]
+----
+
+IMPORT_SUITE(Vector);
+
+BEGIN_REGISTRATION
+    REGISTER(CanarySuite)
+    REGISTER(Vector)
+END_REGISTRATION
+----
+
+We can now compile and run the unit tests. Note that we are now linking against
+`libginger` because we're using *ginger's* vector functionality.
+[source,c]
+----
+λ gcc -std=c11 -o unittest main.c vector.c -lginger
+λ ./unittest
+[SUITE] CanarySuite
+  [TEST] CanaryTest main.c:4 - expected 5, got 3 [FAIL]
+[SUITE] Vector
+  [TEST] VectorAlloc  [OK]
+RESULTS: 2 tests (1 ok, 1 failed)
+----
+
+Test Suite::
+    <<unit-test-suite,UNIT>>,
+    <<unit-test-suite,BEGIN_SUITE>>,
+    <<unit-test-suite,ADD_UNIT>>,
+    <<unit-test-suite,END_SUITE>>
+
+Entry Point::
+    <<unit-entry,IMPORT_SUITE>>,
+    <<unit-entry,BEGIN_REGISTRATION>>,
+    <<unit-entry,REGISTER>>,
+    <<unit-entry,END_REGISTRATION>>,
+    <<unit-entry,UNIT_MAIN>>
+
+Assertions::
+    <<unit-assert-bool,ASSERT_TRUE>>,
+    <<unit-assert-bool,ASSERT_FALSE>>,
+    <<unit-assert-equal,ASSERT_EQUAL>>,
+    <<unit-assert-equal,ASSERT_NOT_EQUAL>>,
+    <<unit-assert-equal,ASSERT_EQUAL_U>>,
+    <<unit-assert-pointer,ASSERT_EQUAL_P>>,
+    <<unit-assert-pointer,ASSERT_NULL>>,
+    <<unit-assert-pointer,ASSERT_NOT_NULL>>,
+    <<unit-assert-float,ASSERT_NAN>>,
+    <<unit-assert-float,ASSERT_NOT_NAN>>,
+    <<unit-assert-float,ASSERT_INF>>,
+    <<unit-assert-float,ASSERT_NOT_INF>>,
+    <<unit-assert-float,ASSERT_DBL_NEAR>>,
+    <<unit-assert-float,ASSERT_DBL_NEAR_TOL>>,
+    <<unit-assert-float-array,ASSERT_DBL_ARRAY_NEAR>>,
+    <<unit-assert-float-array,ASSERT_DBL_ARRAY_NEAR_TOL>>,
+    <<unit-assert-signal,ASSERT_SIGNAL>>
+
+== Test Suite
+****
+[[unit-test-suite]]
+[source,c]
+----
+#define UNIT(TEST_NAME)
+#define BEGIN_SUITE(SUITE_NAME)
+#define ADD_UNIT(TEST_NAME)
+#define END_SUITE
+----
+
+These macros are used to create unit tests (`UNIT`), test suites (`BEGIN_SUITE`,
+`END_SUITE`), add add those tests to the suite (`ADD_UNIT`).
+
+*Example:*
+[source,c]
+----
+#include <ginger/unit.h>
+
+UNIT(CanaryTest) {
+    ASSERT_EQUAL(3, 1 + 2);
+}
+
+BEGIN_SUITE(CanarySuite)
+    ADD_UNIT(CanaryTest)
+END_SUITE
+----
+****
+
+== Entry Point
+****
+[[unit-entry]]
+[source,c]
+----
+#define IMPORT_SUITE(SUITE_NAME)
+#define BEGIN_REGISTRATION
+#define REGISTER(SUITE_NAME)
+#define END_REGISTRATION
+#define UNIT_MAIN()
+----
+
+These macros are used to import and register test suites with the main entry
+point. The `UNIT_MAIN` creates a standard `main` function for the executable.
+
+*Example:*
+[source,c]
+----
+#include <ginger/unit.h>
+
+IMPORT_SUITE(CanaryTest);
+
+BEGIN_REGISTRATION
+    REGISTER(CanaryTest)
+END_REGISTRATION
+
+UNIT_MAIN()
+----
+****
+
+== Assertions
+****
+[[unit-assert-bool]]
+[source,c]
+----
+#define ASSERT_TRUE(real)
+#define ASSERT_FALSE(real)
+----
+
+Assert that an expression evaluates to true or false.
+
+*Example:*
+[source,c]
+----
+ASSERT_TRUE(true);
+ASSERT_FALSE(false);
+
+ASSERT_TRUE(0); // FAIL
+ASSERT_FALSE(1); //FAIL
+----
+****
+
+****
+[[unit-assert-equal]]
+[source,c]
+----
+#define ASSERT_EQUAL(exp, real)
+#define ASSERT_NOT_EQUAL(nexp, real)
+#define ASSERT_EQUAL_U(exp, real)
+----
+
+Assert that two integral values are (not) equal. `ASSERT_EQUAL_U` performs
+unsigned comparisons.
+
+*Example:*
+[source,c]
+----
+ASSERT_EQUAL(3, 1 + 2);
+ASSERT_NOT_EQUAL(5, 3);
+----
+****
+
+****
+[[unit-assert-pointer]]
+[source,c]
+----
+#define ASSERT_EQUAL_P(exp, real)
+#define ASSERT_NULL(real)
+#define ASSERT_NOT_NULL(real)
+----
+
+Compare pointers for equality or ensure that a pointer is (not) `NULL`.
+
+*Example:*
+[source,c]
+----
+int x = 5;
+int *a = &x, *b = &x, *c = NULL;
+
+ASSERT_EQUAL_P(a, b);
+ASSERT_NULL(c);
+ASSERT_NOT_NULL(a);
+----
+****
+
+****
+[[unit-assert-float]]
+[source,c]
+----
+#define ASSERT_NAN(real)
+#define ASSERT_NOT_NAN(real)
+#define ASSERT_INF(real)
+#define ASSERT_NOT_INF(real)
+
+#define ASSERT_DBL_NEAR(exp, real)
+#define ASSERT_DBL_NEAR_TOL(exp, real, tol)
+----
+
+Test floating-point values. Floating-point comparisions are tricky. The best we
+can do is compare for equality up to some tolerance. If the user would like to
+specify that tolerance, they should use `ASSERT_DBL_NEAR_TOL`. `ASSERT_DBL_NEAR`
+uses a tolerance equal to the machine epsilon `DBL_EPSILON`.
+
+`ASSERT_DBL_NEAR` and `ASSERT_DBL_NEAR_TOL` fail if `real` is either `NAN` or
+`INF`.
+
+*Example:*
+[source,c]
+----
+ASSERT_NAN(0.0/0.0);
+ASSERT_INF(5.0/0.0);
+
+ASSERT_DBL_NEAR(0.5, 1.0 / 2.0);
+ASSERT_DBL_NEAR_TOL(0.5, 0.5001, 1e-3);
+
+ASSERT_DBL_NEAR(0.5, NAN); // FAILS
+ASSERT_DBL_NEAR(0.5, INF); // FAILS
+----
+****
+
+****
+[[unit-assert-float-array]]
+[source,c]
+----
+#define ASSERT_DBL_ARRAY_NEAR(exp, real, n)
+#define ASSERT_DBL_ARRAY_NEAR_TOL(exp, real, n, tol)
+----
+
+These macros compare arrays of floating-point values, and essentially amount to
+iterated applications of the <<unit-assert-float,ASSERT_DBL_NEAR>> or
+<<unit-assert-float,ASSERT_DBL_NEAR_TOL>>.
+
+*Example:*
+[source,c]
+----
+#include <math.h>
+
+double expect[6] = {0.0, 1.0, 1.414214, 1.732051, 2.0, 2.236068};
+double got[6] = {sqrt(0.), sqrt(1.), sqrt(2.), sqrt(3.), sqrt(4.), sqrt(5.)};
+
+ASSERT_DBL_ARRAY_NEAR(expect, got, 6); // FAILS DUE TO PRECISION
+ASSERT_DBL_ARRAY_NEAR_TOL(expect, got, 6, 1e-6); // SUCCEEDS
+----
+****
+
+****
+[[unit-assert-signal]]
+[source,c]
+----
+#define ASSERT_SIGNAL(sig, code)
+----
+
+Assert that a signal is raised a code snippet.
+
+*Example:*
+[source, c]
+----
+#include <ginger/vector.h>
+
+int *xs = NULL;
+ASSERT_SIGNAL(SIGSEGV, gvector_push(xs, 5));
+----
+****
