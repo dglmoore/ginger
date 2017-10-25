@@ -496,7 +496,7 @@ or <code>homebrew</code>, <code>macports</code> or <code>fink</code> on OS X.</p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-sh" data-lang="sh">λ cmake . -DCMAKE_BUILD_TYPE=Release
+<pre class="prettyprint highlight"><code class="language-sh" data-lang="sh">λ cmake . -DCMAKE_BUILD_TYPE=Release -DEXAMPLES=Yes
 λ make all tests
 λ sudo make install</code></pre>
 </div>
@@ -511,7 +511,7 @@ from the prompt:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-sh" data-lang="sh">λ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015"
+<pre class="prettyprint highlight"><code class="language-sh" data-lang="sh">λ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015" -DEXAMPLES=Yes
 λ msbuild /p:Configuration=Release ALL_BUILD.vcxproj
 λ test\Release\ginger_unittest.exe</code></pre>
 </div>
@@ -1431,7 +1431,7 @@ ASSERT_SIGNAL(SIGSEGV, gvector_push(xs, 5));</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.2.1<br>
-Last updated 2017-10-24 23:31:20 DST
+Last updated 2017-10-25 08:34:56 DST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
