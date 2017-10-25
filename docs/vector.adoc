@@ -1,0 +1,343 @@
+[[GVector]]
+= Dynamics Arrays
+
+*Ginger* provides a "fat pointer" implementation of dynamic arrays called
+`gvector`. This means that *ginger's* dynamic arrays look and feel like C-style
+arrays, but have additional structural informational such as their capacity,
+length and element size.
+
+[horizontal]
+Type Definitions::
+    <<gvector,gvector>>,
+    <<gvector,gvector_const>>
+Accessors::
+    <<gvector-access,gvector_cap>>,
+    <<gvector-access,gvector_len>>,
+    <<gvector-access,gvector_size>>,
+    <<gvector-isempty,gvector_isempty>>
+Memory Management::
+    <<gvector-alloc,gvector_alloc>>,
+    <<gvector-free,gvector_free>>,
+    <<gvector-dup,gvector_dup>>,
+    <<gvector-copy,gvector_copy>>,
+    <<gvector-reserve,gvector_reserve>>,
+    <<gvector-shrink,gvector_shrink>>
+Stack Operations::
+    <<gvector-push,gvector_push>>,
+    <<gvector-pop,gvector_pop>>
+
+== Type Definitions
+****
+[[gvector]]
+[source,c]
+----
+typedef void* gvector;
+typedef void const* gvector_const;
+----
+
+*Ginger's* vector type is implemented as a fat-pointer. When a `gvector` is
+allocated, its capacity, length and element size are stored in a block of memory
+near the array. A pointer to the first element of the vector can then be used
+to retrieve the structural information.
+
+The `gvector` type is a `void`-pointer to allow for somewhat generic operations.
+However, this choice makes writing some functions, such as generic `printf`-type
+function, infeasible.
+****
+
+****
+[[gvector-access]]
+[source,c]
+----
+#define gvector_cap(v)
+#define gvector_len(v)
+#define gvector_size(v)
+----
+
+Get the capacity, length or element size of a vector `v`.
+
+*Example:*
+[source,c]
+----
+double *xs = gvector_alloc(5, 2, sizeof(double));
+printf("Capacity: %ld\n", gvector_cap(xs));
+printf("Length: %ld\n", gvector_len(xs));
+printf("Element size: %ld\n", gvector_size(xs));
+gvector_free(xs);
+----
+****
+
+****
+[[gvector-isempty]]
+[source,c]
+----
+#define gvector_isempty(v)
+----
+
+Determine if a vector `v` is empty. This is equivalent to `gvector_len(v) == 0`.
+
+*Example:*
+[source,c]
+----
+double *xs = gvector_alloc(5, 0, sizeof(double));
+printf("Is Empty?: %d", gvector_isempty(xs)); // Is Empty?: 1
+gvector_push(xs, 0);
+printf("Is Empty?: %d", gvector_isempty(xs)); // Is Empty?: 0
+gvector_free(xs);
+----
+****
+
+== Memory Management
+****
+[[gvector-alloc]]
+[source,c]
+----
+gvector gvector_alloc(size_t capacity, size_t length, size_t size);
+----
+
+Allocate an uninitialized `gvector` with a given capacity, length and element
+size.
+
+*Exceptional Cases:*
+
+    . If `length > capacity`, then the length is overridden by the capacity.
+    . If `size == 0`, then no memory is allocated and `NULL` is returned.
+    . If memory allocation fails, then `NULL` is returned.
+
+*Example:*
+[source,c]
+----
+char *xs = gvector_alloc(5, 3, sizeof(char));
+assert(xs != NULL);
+memset(xs, '\0', gvector_cap(xs) * gvector_size(xs));
+assert(gvector_cap(xs) == 5);
+assert(gvector_len(xs) == 3);
+assert(gvector_size(xs) == sizeof(char));
+gvector_free(xs)
+----
+****
+
+****
+[[gvector-free]]
+[source,c]
+----
+void gvector_free(gvector v);
+----
+
+Free any memory associated with the vector `v`. This function is a noop when
+`v == NULL`.
+
+*Example:*
+[source,c]
+----
+gvector_free(NULL); // NOOP
+
+int *xs = gvector_alloc(5, 0, sizeof(int));
+gvector_free(xs); // succeeds even if xs == NULL
+----
+****
+
+****
+[[gvector-dup]]
+[source,c]
+----
+gvector gvector_dup(gvector_const v);
+----
+
+Duplicate a vector `v` and return the new `gvector`.
+
+*Exceptional Cases:*
+
+    . This is a noop if `v == NULL`.
+    . If memory allocation fails, `NULL` is returned.
+
+*Example:*
+[source,c]
+----
+gvector_dup(NULL); // NOOP
+
+char *xs = gvector_alloc(5, 5, sizeof(char));
+assert(xs);
+memset(xs, 'a', gvector_cap(xs) * gvector_size(xs));
+
+char *ys = gvector_dup(xs);
+assert(ys);
+for (size_t i = 0; i < gvector_len(ys); ++i) printf("%c", ys[i]); // aaaaa
+gvector_free(ys);
+gvector_free(xs);
+----
+****
+
+****
+[[gvector-copy]]
+[source,c]
+----
+size_t gvector_copy(gvector dst, gvector_const src);
+----
+
+Copy the contents of one vector `src` to another `dst`, and return the number of
+elements copied.
+
+The number of elements copied will be the smaller of the two lengths, and the
+size of `dst` will not change.
+
+*Exceptional Cases:*
+
+    . This is a noop if either `dst == NULL` or `src == NULL`.
+    . This is a noop if the element sizes of `dst` and `src` differ. `NULL` is
+      returned.
+    . If memory allocation fails, `NULL` is returned.
+
+*Example:*
+[source,c]
+----
+int *xs = NULL, *ys = NULL;
+
+gvector_copy(ys, xs); // NOOP
+
+xs = gvector_alloc(5, 5, sizeof(int));
+for (size_t i = 0; i < gvector_len(xs); ++i) xs[i] = i;
+gvector_copy(ys, xs); // NOOP since ys == NULL
+gvector_copy(xs, ys); // NOOP since ys == NULL
+
+ys = gvector_alloc(3, 3, sizeof(int));
+assert(gvector_copy(ys, xs) == 3); // 3 elements are copied from xs to ys
+for (size_t i = 0; i < gvector_len(ys); ++i) printf("%d ", ys[i]); // 0 1 2
+
+for (size_t i = 0; i < gvector_len(ys); ++i) ys[i] = -i;
+assert(gvector_copy(xs, ys) == 3); // 3 elements are copied from ys to xs
+for (size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 -1 -2 3 4
+
+gvector_free(ys);
+gvector_free(xs);
+----
+****
+
+****
+[[gvector-reserve]]
+[source,c]
+----
+gvector gvector_reserve(gvector v, size_t capacity);
+----
+
+Change the capacity of the vector `v`, returning a pointer to the newly resized
+`gvector`.
+
+*Exceptional Cases:*
+
+    . This is a noop if `v == NULL`.
+    . If the reallocation failed, `NULL` is returned.
+
+*Example:*
+[source,c]
+----
+gvector_reserve(NULL, 0); // NOOP
+
+char *xs = gvectr_alloc(3, 3, sizeof(char));
+memset(xs, 'a', 3);
+
+xs = gvector_reserve(xs, 6);
+assert(gvector_cap(xs) == 6);
+assert(gvector_len(xs) == 3);
+assert(strncmp(xs, "aaa", 3) == 0);
+
+xs = gvector_reserve(xs, 0);
+assert(gvector_cap(xs) == 0);
+assert(gvector_len(xs) == 0);
+
+gvector_free(xs);
+----
+****
+
+****
+[[gvector-shrink]]
+[source,c]
+----
+gvector gvector_shrink(gvector v);
+----
+
+Reduce the capacity of the vector `v` to its length, and return the resized
+`gvector`.
+
+*Exceptional Cases:*
+
+    . If the reallocation failed, `NULL` is returned.
+
+*Examples:*
+[source,c]
+----
+gvector_shrink(NULL); // NOOP
+
+char *xs = gvector_alloc(5, 3, sizeof(char));
+memset(xs, 'a', gvector_len(xs) * gvector_size(xs));
+
+xs = gvector_shrink(xs);
+assert(gvector_cap(xs) == gvector_len(xs));
+for (size_t i = 0; i < gvector_len(xs); ++i) printf("%c", xs[i]); // aaa
+
+gvector_free(xs);
+----
+****
+
+== Stack Operations
+****
+[[gvector-push]]
+[source,c]
+----
+#define gvector_push(v, x)
+----
+
+Push an element `x` onto the back of the vector `v`. The capacity of the vector
+is doubled if the length exceeds the current capacity.
+
+*Exceptional Cases:*
+
+    . If `v == NULL`, a segmentation fault is raised.
+    . If the resizing fails, then a segmentation fault is raised.
+
+*Example:*
+[source,c]
+----
+gvector_push(NULL, 0); // SIGSEGV
+
+int *xs = gvector_alloc(0, 0, sizeof(int))
+for (size_t i = 0; i < 5; ++i) gvector_push(xs, i);
+assert(gvector_cap(xs) == 8);
+assert(gvector_len(xs) == 5);
+for(size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2 3 4 
+gvector_free(xs);
+----
+****
+
+****
+[[gvector-pop]]
+[source,c]
+----
+#define gvector_pop(v)
+----
+
+Pop an element off of the back of the vector `v`. The capacity is left
+unchanged, and the length is decremented. The value of element is discarded.
+
+*Example:*
+[source,c]
+----
+gvector_pop(NULL); // NOOP
+
+int *xs = gvector_alloc(3, 0, sizeof(int));
+gvector_pop(NULL); // NOOP
+gvector_free(xs);
+
+xs = gvector_alloc(5, 5, sizeof(int));
+for (size_t i = 0; i < gvector_len(xs); ++i) xs[i] = i;
+for (size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2 3 4
+
+gvector_pop(xs);
+gvector_pop(xs);
+assert(gvector_cap(xs) == 5);
+assert(gvector_len(xs) == 3);
+for (size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2
+
+gvector_free(xs);
+----
+****

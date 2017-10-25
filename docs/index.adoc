@@ -1,0 +1,21 @@
+= Ginger: A simple library for a more fruitful C
+Douglas G. Moore <doug@dglmoore.com>
+v0.2.0, October 2017
+:toc2:
+:toclevels: 3
+:source-highlighter: prettify
+:stem: latexmath
+
+*Ginger* is a simple library written to make C programmers' lives easier by
+augmenting the C standard library with useful utilities that are sorely lacking.
+
+image:https://travis-ci.org/dglmoore/ginger.svg?branch=master[Build Status (Travis CI), link=https://travis-ci.org/dglmoore/ginger]
+image:https://ci.appveyor.com/api/projects/status/c7jo983wjih5hahb?svg=true[Build Status (AppVeyor), link=https://ci.appveyor.com/project/dglmoore/ginger]
+
+:leveloffset: 1
+
+include::getting-started.adoc[]
+
+include::vector.adoc[]
+
+include::unit.adoc[]

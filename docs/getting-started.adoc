@@ -1,0 +1,47 @@
+= Getting Started
+
+== Installation
+To build *ginger*, you will need to have https://cmake.org/[CMake]. For most
+you can use your package manager, e.g. `apt-get`, `pacman` or `yum` on Linux
+or `homebrew`, `macports` or `fink` on OS X.
+
+=== Linux, OS X, and Windows (Bash, MinGW and Cygwin)
+Once CMake is installed, building, testing and installing the library is a snap
+[source, sh]
+----
+λ cmake . -DCMAKE_BUILD_TYPE=Release
+λ make all tests
+λ sudo make install
+----
+
+=== Windows with MSVC
+Building with MSVC is a bit more involved. Open the Visual C++ MSBuild command
+prompt (should be in your start menu). You can then run cmake build and test
+from the prompt:
+[source, sh]
+----
+λ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015"
+λ msbuild /p:Configuration=Release ALL_BUILD.vcxproj
+λ test\Release\ginger_unittest.exe
+----
+Installation requires the user to manually copy the headers and libraries to
+wherever the user would like.
+
+== Getting Help
+*Ginger* is developed to help you write better C code faster, but I can't do it
+without your feedback. I host the project's source code and issue tracker on
+GitHub. Please create an issue if you find a bug, an error in this
+documentation, or have a feature you'd like to request.
+
+Ginger Source Repository::
+    https://github.com/dglmoore/ginger
+
+Issue tracker::
+    https://github.com/dglmoore/ginger/issues
+
+== Copyright and Licensing
+Copyright © 2016-2017 Douglas G. Moore. Free use of this software is granted
+under the terms of the MIT License.
+
+See the https://github.com/dglmoore/ginger/blob/master/LICENSE[LICENSE] file for
+details.
