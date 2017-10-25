@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Douglas G. Moore</span><br>
 <span id="email" class="email"><a href="mailto:doug@dglmoore.com">doug@dglmoore.com</a></span><br>
-<span id="revnumber">version 0.2.0,</span>
+<span id="revnumber">version 0.2.1,</span>
 <span id="revdate">October 2017</span>
 </div>
 <div id="toc" class="toc2">
@@ -473,6 +473,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><strong>Ginger</strong> is a simple library written to make C programmers' lives easier by
 augmenting the C standard library with useful utilities that are sorely lacking.</p>
 </div>
+<div class="paragraph">
+<p><span class="image"><a class="image" href="https://travis-ci.org/dglmoore/ginger"><img src="https://travis-ci.org/dglmoore/ginger.svg?branch=master" alt="Build Status (Travis CI)"></a></span>
+<span class="image"><a class="image" href="https://ci.appveyor.com/project/dglmoore/ginger"><img src="https://ci.appveyor.com/api/projects/status/c7jo983wjih5hahb/branch/master?svg=true" alt="Build Status (AppVeyor)"></a></span></p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -492,9 +496,9 @@ or <code>homebrew</code>, <code>macports</code> or <code>fink</code> on OS X.</p
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>$ cmake . -DCMAKE_BUILD_TYPE=Release
-$ make all tests
-$ sudo make install</code></pre>
+<pre class="prettyprint highlight"><code class="language-sh" data-lang="sh">λ cmake . -DCMAKE_BUILD_TYPE=Release
+λ make all tests
+λ sudo make install</code></pre>
 </div>
 </div>
 </div>
@@ -507,9 +511,9 @@ from the prompt:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>$ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015"
-$ msbuild /p:Configuration=Release ALL_BUILD.vcxproj
-$ test\Release\ginger_unittest.exe</code></pre>
+<pre class="prettyprint highlight"><code class="language-sh" data-lang="sh">λ cmake -DCMAKE_BUILD_TYPE=Release -G"Visual Studio 14 2015"
+λ msbuild /p:Configuration=Release ALL_BUILD.vcxproj
+λ test\Release\ginger_unittest.exe</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -523,8 +527,8 @@ wherever the user would like.</p>
 <div class="paragraph">
 <p><strong>Ginger</strong> is developed to help you write better C code faster, but I can&#8217;t do it
 without your feedback. I host the project&#8217;s source code and issue tracker on
-GitHub. Please create an issue f you find a bug, an error in this documentation,
-or have a feature you&#8217;d like to request.</p>
+GitHub. Please create an issue if you find a bug, an error in this
+documentation, or have a feature you&#8217;d like to request.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -609,6 +613,8 @@ Stack Operations
 </div>
 <div class="sect2">
 <h3 id="_type_definitions">Type Definitions</h3>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">typedef void* gvector;
@@ -626,8 +632,10 @@ to retrieve the structural information.</p>
 However, this choice makes writing some functions, such as generic <code>printf</code>-type
 function, infeasible.</p>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-access" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define gvector_cap(v)
@@ -650,8 +658,10 @@ printf("Element size: %ld\n", gvector_size(xs));
 gvector_free(xs);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-isempty" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define gvector_isempty(v)</code></pre>
@@ -673,8 +683,12 @@ gvector_free(xs);</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_memory_management">Memory Management</h3>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-alloc" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">gvector gvector_alloc(size_t capacity, size_t length, size_t size);</code></pre>
@@ -714,8 +728,10 @@ assert(gvector_size(xs) == sizeof(char));
 gvector_free(xs)</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-free" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">void gvector_free(gvector v);</code></pre>
@@ -736,8 +752,10 @@ int *xs = gvector_alloc(5, 0, sizeof(int));
 gvector_free(xs); // succeeds even if xs == NULL</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-dup" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">gvector gvector_dup(gvector_const v);</code></pre>
@@ -777,8 +795,10 @@ gvector_free(ys);
 gvector_free(xs);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-copy" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">size_t gvector_copy(gvector dst, gvector_const src);</code></pre>
@@ -835,8 +855,10 @@ gvector_free(ys);
 gvector_free(xs);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-reserve" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">gvector gvector_reserve(gvector v, size_t capacity);</code></pre>
@@ -881,8 +903,10 @@ assert(gvector_len(xs) == 0);
 gvector_free(xs);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-shrink" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">gvector gvector_shrink(gvector v);</code></pre>
@@ -920,8 +944,12 @@ gvector_free(xs);</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_stack_operations">Stack Operations</h3>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-push" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define gvector_push(v, x)</code></pre>
@@ -959,8 +987,10 @@ for(size_t i = 0; i &lt; gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2 3 
 gvector_free(xs);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="gvector-pop" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define gvector_pop(v)</code></pre>
@@ -992,6 +1022,8 @@ assert(gvector_len(xs) == 3);
 for (size_t i = 0; i &lt; gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2
 
 gvector_free(xs);</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1153,6 +1185,8 @@ RESULTS: 2 tests (1 ok, 1 failed)</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_test_suite">Test Suite</h3>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-test-suite" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define UNIT(TEST_NAME)
@@ -1182,8 +1216,12 @@ END_SUITE</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_entry_point">Entry Point</h3>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-entry" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define IMPORT_SUITE(SUITE_NAME)
@@ -1214,8 +1252,12 @@ UNIT_MAIN()</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_assertions">Assertions</h3>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-assert-bool" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define ASSERT_TRUE(real)
@@ -1237,8 +1279,10 @@ ASSERT_TRUE(0); // FAIL
 ASSERT_FALSE(1); //FAIL</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-assert-equal" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define ASSERT_EQUAL(exp, real)
@@ -1259,8 +1303,10 @@ unsigned comparisons.</p>
 ASSERT_NOT_EQUAL(5, 3);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-assert-pointer" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define ASSERT_EQUAL_P(exp, real)
@@ -1284,8 +1330,10 @@ ASSERT_NULL(c);
 ASSERT_NOT_NULL(a);</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-assert-float" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define ASSERT_NAN(real)
@@ -1322,8 +1370,10 @@ ASSERT_DBL_NEAR(0.5, NAN); // FAILS
 ASSERT_DBL_NEAR(0.5, INF); // FAILS</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-assert-float-array" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define ASSERT_DBL_ARRAY_NEAR(exp, real, n)
@@ -1349,8 +1399,10 @@ ASSERT_DBL_ARRAY_NEAR(expect, got, 6); // FAILS DUE TO PRECISION
 ASSERT_DBL_ARRAY_NEAR_TOL(expect, got, 6, 1e-6); // SUCCEEDS</code></pre>
 </div>
 </div>
-<hr>
-<hr>
+</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
 <div id="unit-assert-signal" class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-c" data-lang="c">#define ASSERT_SIGNAL(sig, code)</code></pre>
@@ -1374,10 +1426,12 @@ ASSERT_SIGNAL(SIGSEGV, gvector_push(xs, 5));</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Version 0.2.0<br>
-Last updated 2017-10-24 17:04:45 DST
+Version 0.2.1<br>
+Last updated 2017-10-24 23:31:20 DST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
