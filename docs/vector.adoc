@@ -27,6 +27,7 @@ Stack Operations::
     <<gvector-pop,gvector_pop>>
 
 == Type Definitions
+****
 [[gvector]]
 [source,c]
 ----
@@ -42,10 +43,9 @@ to retrieve the structural information.
 The `gvector` type is a `void`-pointer to allow for somewhat generic operations.
 However, this choice makes writing some functions, such as generic `printf`-type
 function, infeasible.
+****
 
-'''
-'''
-
+****
 [[gvector-access]]
 [source,c]
 ----
@@ -65,9 +65,9 @@ printf("Length: %ld\n", gvector_len(xs));
 printf("Element size: %ld\n", gvector_size(xs));
 gvector_free(xs);
 ----
-'''
-'''
+****
 
+****
 [[gvector-isempty]]
 [source,c]
 ----
@@ -85,8 +85,10 @@ gvector_push(xs, 0);
 printf("Is Empty?: %d", gvector_isempty(xs)); // Is Empty?: 0
 gvector_free(xs);
 ----
+****
 
 == Memory Management
+****
 [[gvector-alloc]]
 [source,c]
 ----
@@ -113,9 +115,9 @@ assert(gvector_len(xs) == 3);
 assert(gvector_size(xs) == sizeof(char));
 gvector_free(xs)
 ----
-'''
-'''
+****
 
+****
 [[gvector-free]]
 [source,c]
 ----
@@ -133,9 +135,9 @@ gvector_free(NULL); // NOOP
 int *xs = gvector_alloc(5, 0, sizeof(int));
 gvector_free(xs); // succeeds even if xs == NULL
 ----
-'''
-'''
+****
 
+****
 [[gvector-dup]]
 [source,c]
 ----
@@ -164,9 +166,9 @@ for (size_t i = 0; i < gvector_len(ys); ++i) printf("%c", ys[i]); // aaaaa
 gvector_free(ys);
 gvector_free(xs);
 ----
-'''
-'''
+****
 
+****
 [[gvector-copy]]
 [source,c]
 ----
@@ -209,9 +211,9 @@ for (size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 -1 -2 3 
 gvector_free(ys);
 gvector_free(xs);
 ----
-'''
-'''
+****
 
+****
 [[gvector-reserve]]
 [source,c]
 ----
@@ -245,9 +247,9 @@ assert(gvector_len(xs) == 0);
 
 gvector_free(xs);
 ----
-'''
-'''
+****
 
+****
 [[gvector-shrink]]
 [source,c]
 ----
@@ -275,8 +277,10 @@ for (size_t i = 0; i < gvector_len(xs); ++i) printf("%c", xs[i]); // aaa
 
 gvector_free(xs);
 ----
+****
 
 == Stack Operations
+****
 [[gvector-push]]
 [source,c]
 ----
@@ -303,9 +307,9 @@ assert(gvector_len(xs) == 5);
 for(size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2 3 4 
 gvector_free(xs);
 ----
-'''
-'''
+****
 
+****
 [[gvector-pop]]
 [source,c]
 ----
@@ -336,3 +340,4 @@ for (size_t i = 0; i < gvector_len(xs); ++i) printf("%d ", xs[i]); // 0 1 2
 
 gvector_free(xs);
 ----
+****

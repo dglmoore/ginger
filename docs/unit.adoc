@@ -134,7 +134,7 @@ Assertions::
     <<unit-assert-signal,ASSERT_SIGNAL>>
 
 == Test Suite
-
+****
 [[unit-test-suite]]
 [source,c]
 ----
@@ -160,9 +160,10 @@ BEGIN_SUITE(CanarySuite)
     ADD_UNIT(CanaryTest)
 END_SUITE
 ----
+****
 
 == Entry Point
-
+****
 [[unit-entry]]
 [source,c]
 ----
@@ -189,9 +190,10 @@ END_REGISTRATION
 
 UNIT_MAIN()
 ----
+****
 
 == Assertions
-
+****
 [[unit-assert-bool]]
 [source,c]
 ----
@@ -210,9 +212,9 @@ ASSERT_FALSE(false);
 ASSERT_TRUE(0); // FAIL
 ASSERT_FALSE(1); //FAIL
 ----
-'''
-'''
+****
 
+****
 [[unit-assert-equal]]
 [source,c]
 ----
@@ -230,9 +232,9 @@ unsigned comparisons.
 ASSERT_EQUAL(3, 1 + 2);
 ASSERT_NOT_EQUAL(5, 3);
 ----
-'''
-'''
+****
 
+****
 [[unit-assert-pointer]]
 [source,c]
 ----
@@ -253,9 +255,9 @@ ASSERT_EQUAL_P(a, b);
 ASSERT_NULL(c);
 ASSERT_NOT_NULL(a);
 ----
-'''
-'''
+****
 
+****
 [[unit-assert-float]]
 [source,c]
 ----
@@ -288,9 +290,9 @@ ASSERT_DBL_NEAR_TOL(0.5, 0.5001, 1e-3);
 ASSERT_DBL_NEAR(0.5, NAN); // FAILS
 ASSERT_DBL_NEAR(0.5, INF); // FAILS
 ----
-'''
-'''
+****
 
+****
 [[unit-assert-float-array]]
 [source,c]
 ----
@@ -313,9 +315,9 @@ double got[6] = {sqrt(0.), sqrt(1.), sqrt(2.), sqrt(3.), sqrt(4.), sqrt(5.)};
 ASSERT_DBL_ARRAY_NEAR(expect, got, 6); // FAILS DUE TO PRECISION
 ASSERT_DBL_ARRAY_NEAR_TOL(expect, got, 6, 1e-6); // SUCCEEDS
 ----
-'''
-'''
+****
 
+****
 [[unit-assert-signal]]
 [source,c]
 ----
@@ -332,3 +334,4 @@ Assert that a signal is raised a code snippet.
 int *xs = NULL;
 ASSERT_SIGNAL(SIGSEGV, gvector_push(xs, 5));
 ----
+****
