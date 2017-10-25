@@ -31,8 +31,8 @@ wherever the user would like.
 
 *Ginger* is developed to help you write better C code faster, but I can't do it
 without your feedback. I host the project's source code and issue tracker on
-GitHub. Please create an issue f you find a bug, an error in this documentation,
-or have a feature you'd like to request.
+GitHub. Please create an issue if you find a bug, an error in this
+documentation, or have a feature you'd like to request.
 
 Ginger Source Repository::
     https://github.com/dglmoore/ginger
